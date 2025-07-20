@@ -1,15 +1,34 @@
+
 using Azure;
 using Azure.AI.OpenAI;
 using Azure.Identity;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.AI;
 using ModelContextProtocol.Client;
 
-// Create an IChatClient using Azure OpenAI.
-// Note: Replace these with your actual Azure OpenAI endpoint and API key
-// Consider using environment variables or Azure Key Vault for production
-string azureEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? "https://your-resource.openai.azure.com/";
-string azureApiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY") ?? "your-api-key-here";
-string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "gpt-4o";
+var builder = WebApplication.CreateBuilder(args);
+
+// Add CORS support for the React frontend
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+var app = builder.Build();
+
+// Enable CORS
+app.UseCors();
+
+// Setup MCP and OpenAI clients once at startup
+string azureEndpoint = Environment.GetEnvironmentVariable("AZURE_OPENAI_ENDPOINT") ?? "";
+string azureApiKey = Environment.GetEnvironmentVariable("AZURE_OPENAI_API_KEY") ?? "";
+string deploymentName = Environment.GetEnvironmentVariable("AZURE_OPENAI_DEPLOYMENT_NAME") ?? "";
+string mcpServerProjectPath = Environment.GetEnvironmentVariable("MCP_SERVER_PROJECT_PATH") ?? "";
 
 IChatClient client =
     new ChatClientBuilder(
@@ -19,10 +38,6 @@ IChatClient client =
     .UseFunctionInvocation()
     .Build();
 
-// Create the MCP client
-// Configure it to start and connect to your MCP server.
-string mcpServerProjectPath = Environment.GetEnvironmentVariable("MCP_SERVER_PROJECT_PATH") ?? "../server/SampleMcpServer.csproj";
-
 IMcpClient mcpClient = await McpClientFactory.CreateAsync(
     new StdioClientTransport(new()
     {
@@ -30,33 +45,23 @@ IMcpClient mcpClient = await McpClientFactory.CreateAsync(
         Arguments = ["--project", mcpServerProjectPath],
         Name = "MCP Database Server",
     }));
-
-// List all available tools from the MCP server.
-Console.WriteLine("Available tools:");
 IList<McpClientTool> tools = await mcpClient.ListToolsAsync();
-foreach (McpClientTool tool in tools)
-{
-    Console.WriteLine($"{tool.Name} - {tool.Description}");
-}
-Console.WriteLine();
 
-// Conversational loop that can utilize the tools via prompts.
-List<ChatMessage> messages = [];
-while (true)
+app.MapPost("/api/chat", async (ChatRequest req) =>
 {
-    Console.Write("Prompt: ");
-    var input = Console.ReadLine();
-    if (string.IsNullOrEmpty(input) || input.ToLower() == "exit")
-        break;
-        
-    messages.Add(new(ChatRole.User, input));
-    List<ChatResponseUpdate> updates = [];
-    await foreach (ChatResponseUpdate update in client
-        .GetStreamingResponseAsync(messages, new() { Tools = [.. tools] }))
+    var messages = new List<ChatMessage> { new(ChatRole.User, req.Message) };
+    var updates = new List<ChatResponseUpdate>();
+    await foreach (var update in client.GetStreamingResponseAsync(messages, new() { Tools = [..tools] }))
     {
-        Console.Write(update);
         updates.Add(update);
     }
-    Console.WriteLine();
-    messages.AddMessages(updates);
-}
+    return new ChatResponse(
+        Response: string.Join("", updates.Select(u => u.ToString())),
+        Success: true
+    );
+});
+
+app.Run();
+
+public record ChatRequest(string Message);
+public record ChatResponse(string Response, bool Success = true, string? Error = null);
