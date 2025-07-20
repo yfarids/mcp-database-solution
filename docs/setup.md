@@ -27,7 +27,7 @@ cd mcp-database-solution
    AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
    AZURE_OPENAI_API_KEY=your-api-key-here
    AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4o
-   MCP_SERVER_PROJECT_PATH=../server/SampleMcpServer1.csproj
+   MCP_SERVER_PROJECT_PATH=../server/SampleMcpServer.csproj
    ```
 
 ### For the Server

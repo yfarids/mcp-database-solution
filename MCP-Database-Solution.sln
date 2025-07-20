@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMcpServer1", "server\SampleMcpServer1.csproj", "{04E4764F-98AA-4EBC-B5C7-6C1B73F8A8B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMcpServer", "server\SampleMcpServer.csproj", "{04E4764F-98AA-4EBC-B5C7-6C1B73F8A8B2}"
 EndProject
 
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCPHostApp", "client\MCPHostApp.csproj", "{5370F85D-FF64-C1E9-B22F-DFE3F4568961}"

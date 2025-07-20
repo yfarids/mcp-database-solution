@@ -21,7 +21,7 @@ IChatClient client =
 
 // Create the MCP client
 // Configure it to start and connect to your MCP server.
-string mcpServerProjectPath = Environment.GetEnvironmentVariable("MCP_SERVER_PROJECT_PATH") ?? "../server/SampleMcpServer1.csproj";
+string mcpServerProjectPath = Environment.GetEnvironmentVariable("MCP_SERVER_PROJECT_PATH") ?? "../server/SampleMcpServer.csproj";
 
 IMcpClient mcpClient = await McpClientFactory.CreateAsync(
     new StdioClientTransport(new()

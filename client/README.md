@@ -25,7 +25,7 @@ AZURE_OPENAI_API_KEY=your-api-key-here
 AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4o
 
 # MCP Server Configuration
-MCP_SERVER_PROJECT_PATH=../server/SampleMcpServer1.csproj
+MCP_SERVER_PROJECT_PATH=../server/SampleMcpServer.csproj
 ```
 
 ## Running the Client

@@ -43,7 +43,7 @@ dotnet run
 export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
 export AZURE_OPENAI_API_KEY="your-api-key"
 export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o"
-export MCP_SERVER_PROJECT_PATH="../server/SampleMcpServer1.csproj"
+export MCP_SERVER_PROJECT_PATH="../server/SampleMcpServer.csproj"
 
 cd client
 dotnet run
@@ -57,7 +57,7 @@ mcp-database-solution/
 ├── MCP-Database-Solution.sln          # Main solution file
 ├── server/                             # MCP Server Project
 │   ├── Program.cs
-│   ├── SampleMcpServer1.csproj
+│   ├── SampleMcpServer.csproj
 │   ├── Tools/
 │   │   ├── WeatherTools.cs
 │   │   └── RandomNumberTools.cs
@@ -87,7 +87,7 @@ Create a `.env` file in the client directory with:
 AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
 AZURE_OPENAI_API_KEY=your-api-key-here
 AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4o
-MCP_SERVER_PROJECT_PATH=../server/SampleMcpServer1.csproj
+MCP_SERVER_PROJECT_PATH=../server/SampleMcpServer.csproj
 ```
 
 ## 🛠️ Development
