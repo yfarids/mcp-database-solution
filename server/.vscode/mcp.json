@@ -1,0 +1,32 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "weather_choices",
+      "description": "Comma separated list of weather descriptions to randomly select.",
+      "password": false
+    }
+  ],
+  "servers": {
+    "Scopaz.SampleMcpServer": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": ["tool", "run", "Scopaz.SampleMcpServer"],
+      "env": {
+        "WEATHER_CHOICES": "${input:weather_choices}"
+      }
+    },
+    "SampleMcpServer": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "."
+      ],
+      "env": {
+        "WEATHER_CHOICES": "sunny,humid,freezing,perfect"
+      }
+    }
+  }
+}
